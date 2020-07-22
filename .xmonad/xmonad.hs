@@ -79,7 +79,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask       -- Sets modkey to super/windows key
 
 myTerminal :: String
-myTerminal = "urxvt"   -- Sets default terminal
+myTerminal = "konsole"   -- Sets default terminal
 
 myBrowser :: String
 myBrowser = "firefox "               -- Sets firefox as browser for tree select
@@ -198,7 +198,6 @@ dtXPConfig = def
       , fgHLight            = "#000000"
       , borderColor         = "#535974"
       , promptBorderWidth   = 0
-      , promptKeymap        = dtXPKeymap
       , position            = Top
 --    , position            = CenteredAt { xpCenterY = 0.3, xpWidth = 0.3 }
       , height              = 20
@@ -231,84 +230,20 @@ promptList = [ ("m", manPrompt)          -- manpages prompt
              , ("x", xmonadPrompt)       -- xmonad prompt
              ]
 
--- Same as the above list except this is for my custom prompts.
-promptList' :: [(String, XPConfig -> String -> X (), String)]
-promptList' = [ ("c", calcPrompt, "qalc")         -- requires qalculate-gtk
-              ]
-
-calcPrompt c ans =
-    inputPrompt c (trim ans) ?+ \input ->
-        liftIO(runProcessWithInput "qalc" [input] "") >>= calcPrompt c
-    where
-        trim  = f . f
-            where f = reverse . dropWhile isSpace
-
-dtXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
-dtXPKeymap = M.fromList $
-     map (first $ (,) controlMask)   -- control + <key>
-     [ (xK_z, killBefore)            -- kill line backwards
-     , (xK_k, killAfter)             -- kill line forwards
-     , (xK_a, startOfLine)           -- move to the beginning of the line
-     , (xK_e, endOfLine)             -- move to the end of the line
-     , (xK_m, deleteString Next)     -- delete a character foward
-     , (xK_b, moveCursor Prev)       -- move cursor forward
-     , (xK_f, moveCursor Next)       -- move cursor backward
-     , (xK_BackSpace, killWord Prev) -- kill the previous word
-     , (xK_y, pasteString)           -- paste a string
-     , (xK_g, quit)                  -- quit out of prompt
-     , (xK_bracketleft, quit)
-     ]
-     ++
-     map (first $ (,) altMask)       -- meta key + <key>
-     [ (xK_BackSpace, killWord Prev) -- kill the prev word
-     , (xK_f, moveWord Next)         -- move a word forward
-     , (xK_b, moveWord Prev)         -- move a word backward
-     , (xK_d, killWord Next)         -- kill the next word
-     , (xK_n, moveHistory W.focusUp')   -- move up thru history
-     , (xK_p, moveHistory W.focusDown') -- move down thru history
-     ]
-     ++
-     map (first $ (,) 0) -- <key>
-     [ (xK_Return, setSuccess True >> setDone True)
-     , (xK_KP_Enter, setSuccess True >> setDone True)
-     , (xK_BackSpace, deleteString Prev)
-     , (xK_Delete, deleteString Next)
-     , (xK_Left, moveCursor Prev)
-     , (xK_Right, moveCursor Next)
-     , (xK_Home, startOfLine)
-     , (xK_End, endOfLine)
-     , (xK_Down, moveHistory W.focusUp')
-     , (xK_Up, moveHistory W.focusDown')
-     , (xK_Escape, quit)
-     ]
-
-archwiki, ebay, news, reddit, urban :: S.SearchEngine
+archwiki :: S.SearchEngine
 
 archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
-ebay     = S.searchEngine "ebay" "https://www.ebay.com/sch/i.html?_nkw="
-news     = S.searchEngine "news" "https://news.google.com/search?q="
-reddit   = S.searchEngine "reddit" "https://www.reddit.com/search/?q="
-urban    = S.searchEngine "urban" "https://www.urbandictionary.com/define.php?term="
-
 -- This is the list of search engines that I want to use. Some are from
 -- XMonad.Actions.Search, and some are the ones that I added above.
 searchList :: [(String, S.SearchEngine)]
 searchList = [ ("a", archwiki)
              , ("d", S.duckduckgo)
-             , ("e", ebay)
-             , ("g", S.google)
              , ("h", S.hoogle)
              , ("i", S.images)
-             , ("n", news)
-             , ("r", reddit)
              , ("s", S.stackage)
-             , ("t", S.thesaurus)
              , ("v", S.vocabulary)
              , ("b", S.wayback)
-             , ("u", urban)
              , ("w", S.wikipedia)
-             , ("y", S.youtube)
-             , ("z", S.amazon)
              ]
 
 myScratchPads :: [NamedScratchpad]
@@ -402,13 +337,13 @@ myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts float
                mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
              where
                -- I've commented out the layouts I don't use.
-               myDefaultLayout =     tall
+               myDefaultLayout =     spirals
                                  ||| magnify
                                  ||| noBorders monocle
-                                 ||| floats
-                                 -- ||| grid
                                  ||| noBorders tabs
-                                 -- ||| spirals
+                                 -- ||| tall
+                                 -- ||| floats
+                                 -- ||| grid
                                  -- ||| threeCol
                                  -- ||| threeRow
 
@@ -423,7 +358,7 @@ myWorkspaces = clickable . (map xmobarEscape)
                -- $ ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
                $ ["dev", "www", "sys", "chat", "vbox", "doc", "mus", "vid", "gfx"]
   where
-        clickable l = [ "<action=xdotool key super+" ++ show (n) ++ "> " ++ ws ++ " </action>" |
+        clickable l = [ "<action=xdotool key super+" ++ show n ++ "> " ++ ws ++ " </action>" |
                       (i,ws) <- zip [1..9] l,
                       let n = i ]
 
@@ -432,14 +367,15 @@ myManageHook = composeAll
      -- using 'doShift ( myWorkspaces !! 7)' sends program to workspace 8!
      -- I'm doing it this way because otherwise I would have to write out
      -- the full name of my workspaces.
-     [ className =? "obs"     --> doShift ( myWorkspaces !! 7 )
-     , className =? "zulip"   --> doShift ( myWorkspaces !! 3 )
-     , className =? "discord" --> doShift ( myWorkspaces !! 3 )
-     , title =? "firefox"     --> doShift ( myWorkspaces !! 1 )
-     , className =? "mpv"     --> doShift ( myWorkspaces !! 7 )
-     , className =? "vlc"     --> doShift ( myWorkspaces !! 7 )
-     , className =? "Gimp"    --> doShift ( myWorkspaces !! 8 )
-     , className =? "Gimp"    --> doFloat
+     [ className =? "obs"		--> doShift ( myWorkspaces !! 7 )
+     , className =? "telegram-desktop"	--> doShift ( myWorkspaces !! 3 )
+     , className =? "zulip"   		--> doShift ( myWorkspaces !! 3 )
+     , className =? "discord"		--> doShift ( myWorkspaces !! 3 )
+     , className =? "firefox"		--> doShift ( myWorkspaces !! 1 )
+     , className =? "mpv"		--> doShift ( myWorkspaces !! 7 )
+     , className =? "vlc"		--> doShift ( myWorkspaces !! 7 )
+     , className =? "Gimp"		--> doShift ( myWorkspaces !! 8 )
+     , className =? "Gimp"		--> doFloat
      , title =? "Oracle VM VirtualBox Manager"     --> doFloat
      , className =? "VirtualBox Manager" --> doShift  ( myWorkspaces !! 4 )
      , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat  -- Float Firefox Dialog
@@ -460,7 +396,7 @@ myKeys =
         , ("M-<Return>", spawn myTerminal)
 
     -- Run Prompt
-        , ("M-S-<Return>", shellPrompt dtXPConfig)   -- Shell Prompt
+        , ("M-S-d", shellPrompt dtXPConfig)   -- Shell Prompt
 
     -- Windows
         , ("M-S-q", kill1)                           -- Kill the currently focused client
@@ -471,10 +407,9 @@ myKeys =
         , ("M-<Delete>", withFocused $ windows . W.sink) -- Push floating window back to tile
         , ("M-S-<Delete>", sinkAll)                      -- Push ALL floating windows to tile
 
-    -- Grid Select (CTRL-g followed by a key)
-        , ("C-g g", goToSelected $ mygridConfig myColorizer)  -- goto selected window
-        , ("C-M1-g", spawnSelected' myAppGrid)                -- grid select favorite apps
-        , ("C-g b", bringSelected $ mygridConfig myColorizer) -- bring selected window
+    -- Grid Select (CTRL-SHIFT-g followed by a key)
+        , ("C-S-g g", goToSelected $ mygridConfig myColorizer)  -- goto selected window
+        , ("C-S-g b", bringSelected $ mygridConfig myColorizer) -- bring selected window
 
     -- Windows navigation
         , ("M-m", windows W.focusMaster)     -- Move focus to the master window
@@ -521,7 +456,7 @@ myKeys =
         , ("M-u l", spawn "mocp --next")
         , ("M-u h", spawn "mocp --previous")
         , ("M-u <Space>", spawn "mocp --toggle-pause")
- 
+
     -- Emacs (CTRL-e followed by a key)
         , ("C-e e", spawn "emacsclient -c -a ''")                            -- start emacs
         , ("C-e b", spawn "emacsclient -c -a '' --eval '(ibuffer)'")         -- list emacs buffers
@@ -569,7 +504,6 @@ myKeys =
         -- Appending some extra xprompts to keybindings list.
         -- Look at "xprompt settings" section this of config for values for "k".
         ++ [("M-p " ++ k, f dtXPConfig') | (k,f) <- promptList ]
-        ++ [("M-p " ++ k, f dtXPConfig' g) | (k,f,g) <- promptList' ]
         -- The following lines are needed for named scratchpads.
           where nonNSP          = WSIs (return (\ws -> W.tag ws /= "nsp"))
                 nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "nsp"))
