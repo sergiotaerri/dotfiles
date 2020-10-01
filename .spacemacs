@@ -92,6 +92,8 @@ This function should only modify configuration layer settings."
             shell-default-position 'bottom)
 
      (org :variables
+          org-confirm-babel-evaluate nil
+          org-startup-shrink-all-tables t
           org-enable-reveal-js-support t
           org-enable-trello-support nil
           org-enable-github-support nil)
