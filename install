@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
-rm -rf .emacs.d/
+if [ ! -d ~/.emacs.d ]; then
 git clone --depth 10 --branch develop --single-branch https://github.com/syl20bnr/spacemacs ~/.emacs.d
+fi
 
 for dir in */
 do
