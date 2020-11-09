@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+rm -rf .emacs.d/
+git clone --depth 10 --branch develop --single-branch https://github.com/syl20bnr/spacemacs ~/.emacs.d
+
+for dir in */
+do
+	stow --verbose --target ~/ -S $dir
+done
