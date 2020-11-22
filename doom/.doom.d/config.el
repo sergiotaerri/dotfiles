@@ -85,7 +85,7 @@
 
 (setq
  projectile-project-search-path '("~/Documents/php ~/Documents/clj")
- +doom-dashboard-banner-file (expand-file-name "marivector.png" doom-private-dir)
+ +doom-dashboard-banner-file (expand-file-name "private/logo.png" doom-private-dir)
  ;;what variable do i use? org-bullets-bullet-list '("⁖")
  which-key-idle-delay 0.44
  dired-dwim-target t
