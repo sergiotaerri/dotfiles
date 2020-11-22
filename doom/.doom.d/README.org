@@ -1,0 +1,40 @@
+#+TITLE:   Private Config
+#+DATE:    novembro 22, 2020
+#+STARTUP: inlineimages nofold
+
+* Table of Contents :TOC_3:noexport:
+- [[#description][Description]]
+- [[#prerequisites][Prerequisites]]
+- [[#troubleshooting][Troubleshooting]]
+
+* Description
+My personal configuration for Doomemacs, currently it's an amalgamation for mainly too other configs: [[https://gitlab.com/dwt1/dotfiles/-/tree/master/.doom.d][Distrotube's]] and [[https://github.com/zaiste/.doom.d/][Zaiste's]].
+
++ Basic PHP support
+
+* Prerequisites
+
++ Php specific
+
+#+BEGIN_SRC sh :dir /sudo:: :tangle (if (doom-system-os 'arch) "yes")
+sudo pacman --needed --noconfirm -S php composer  # or php53, php54, php55
+
+# If you use intelephense:
+sudo pacman -S nodejs npm
+
+
+#Optional dependencies
+composer global require \
+    d11wtq/boris \
+    phpunit/phpunit \
+    techlivezheng/phpctags
+
+# place this in your profile file, like ~/.bash_profile or ~/.zshenv
+export PATH="~/.composer/vendor/bin:$PATH"
+#+END_SRC
+
+then:
+- =M-x ls-install-server=
+- =M-x ligatures/install-patched-font=
+
+* Troubleshooting
