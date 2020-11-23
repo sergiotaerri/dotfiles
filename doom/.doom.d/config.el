@@ -85,7 +85,7 @@
 
 (setq
  projectile-project-search-path '("~/Documents/php ~/Documents/clj")
- +doom-dashboard-banner-file (expand-file-name "private/logo.png" doom-private-dir)
+ +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
  ;;what variable do i use? org-bullets-bullet-list '("⁖")
  which-key-idle-delay 0.44
  dired-dwim-target t
@@ -114,6 +114,19 @@
   '((:command     . "php")
     (:exec        . "%c -r %s")
     (:description . "Run php script")))
+
+;; Eshell
+(setq shell-file-name "/bin/bash"
+      eshell-history-size 5000
+      eshell-buffer-maximum-lines 5000
+      eshell-hist-ignoredups t
+      eshell-scroll-to-bottom-on-input t
+      eshell-destroy-buffer-when-process-dies t
+      eshell-visual-commands'("bash" "htop" "ssh" "zsh")
+      vterm-max-scrollback 5000)
+(map! :leader
+      :desc "Counsel eshell history"
+      "e h" #'counsel-esh-history)
 
 ;; Keybinds
 (setq doom-localleader-key ",")
