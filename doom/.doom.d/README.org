@@ -8,9 +8,12 @@
 - [[#troubleshooting][Troubleshooting]]
 
 * Description
-My personal configuration for Doomemacs, currently it's an amalgamation for mainly too other configs: [[https://gitlab.com/dwt1/dotfiles/-/tree/master/.doom.d][Distrotube's]] and [[https://github.com/zaiste/.doom.d/][Zaiste's]].
+My personal configuration for Doomemacs, currently it's an amalgamation for mainly these wonderful other configs:
+- [[https://gitlab.com/dwt1/dotfiles/-/tree/master/.doom.d][Distrotube's]]
+- [[https://github.com/zaiste/.doom.d/][Zaiste's]]
+- [[https://github.com/tecosaur/emacs-config/][Tecosaurs']]
 
-+ Basic PHP support
+Most of the documenting is done in the config.org file.
 
 * Prerequisites
 
@@ -22,6 +25,8 @@ sudo pacman --needed --noconfirm -S php composer  # or php53, php54, php55
 # If you use intelephense:
 sudo pacman -S nodejs npm
 
+# For formating
+sudo npm install -g prettier @prettier/plugin-php
 
 #Optional dependencies
 composer global require \

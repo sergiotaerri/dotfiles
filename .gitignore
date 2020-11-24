@@ -4,3 +4,4 @@
 *.xmonad/xmonad.o
 *.xmonad/xmonad.hi
 doom/doom.d/private/
+doom/doom.d/config.el

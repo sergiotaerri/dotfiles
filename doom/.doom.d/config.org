@@ -1,0 +1,281 @@
+# -*- mode: org; -*-
+#+title: Doom Emacs Configuration
+#+subtitle: The Methods, Management, and Menagerie of Madness
+#+author: sergiotaerri
+#+startup: fold
+
+* Rudimentary configuration
+Make this file run (slightly) faster with lexical binding (see [[https://nullprogram.com/blog/2016/12/22/][this blog post]]
+for more info).
+
+* Better defaults
+#+begin_src emacs-lisp
+(setq
+ projectile-project-search-path '("~/Documents/php ~/Documents/clj")
+ +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
+ ;;what variable do i use? org-bullets-bullet-list '("⁖")
+ dired-dwim-target t)
+#+end_src
+
+* Theming and Layout
+#+begin_src emacs-lisp
+(setq doom-theme 'doom-one)
+(setq org-directory "~/org/")
+(setq display-line-numbers-type nil)
+#+end_src
+
+* Org
+#+begin_src emacs-lisp
+(after! org
+  (require 'org-bullets)  ; Nicer bullets in org-mode
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (setq org-directory "~/org/"
+        org-agenda-files '("~/org/agenda.org")
+        org-default-notes-file (expand-file-name "notes.org" org-directory)
+        org-ellipsis " ▼ "
+        org-log-done 'time
+        org-journal-dir "~/org/journal/"
+        org-journal-date-format "%B %d, %Y (%A)"
+        org-journal-file-format "%Y-%m-%d.org"
+        org-hide-emphasis-markers t
+        ;; ex. of org-link-abbrev-alist in action
+        ;; [[arch-wiki:Name_of_Page][Description]]
+        org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
+        '(("google" . "http://www.google.com/search?q=")
+          ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
+          ("ddg" . "https://duckduckgo.com/?q=")
+          ("wiki" . "https://en.wikipedia.org/wiki/"))
+        )) ; Task has been cancelled
+#+end_src
+
+** Spellcheck
+#+begin_src emacs-lisp
+(after! org (add-hook 'org-mode-hook 'turn-on-flyspell))
+#+end_src
+
+** LSP support in ~src~ blocks
+Now, by default, LSPs don't really function at all in ~src~ blocks.
+#+begin_src emacs-lisp
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (setq centaur-lsp 'lsp-mode)
+  (cl-check-type lang stringp)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+       (defun ,intern-pre (info)
+         (let ((file-name (->> info caddr (alist-get :file))))
+           (unless file-name
+             (setq file-name (make-temp-file "babel-lsp-")))
+           (setq buffer-file-name file-name)
+           (lsp-deferred)))
+       (put ',intern-pre 'function-documentation
+            (format "Enable lsp-mode in the buffer of org source block (%s)."
+                    (upcase ,lang)))
+       (if (fboundp ',edit-pre)
+           (advice-add ',edit-pre :after ',intern-pre)
+         (progn
+           (defun ,edit-pre (info)
+             (,intern-pre info))
+           (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+(defvar org-babel-lang-list
+  '("go" "python" "ipython" "bash" "sh"))
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
+#+end_src
+** YouTube
+Youtube Links, WHAT?
+The ~[[yt:...]]~ links preview nicely, but don't export nicely. Thankfully, we can
+fix that.
+#+begin_src emacs-lisp
+(after! org
+  (org-link-set-parameters "yt" :export #'+org-export-yt)
+  (defun +org-export-yt (path desc backend _com)
+    (cond ((org-export-derived-backend-p backend 'html)
+           (format "<iframe width='440' \
+height='335' \
+src='https://www.youtube.com/embed/%s' \
+frameborder='0' \
+allowfullscreen>%s</iframe>" path (or "" desc)))
+          ((org-export-derived-backend-p backend 'latex)
+           (format "\\href{https://youtu.be/%s}{%s}" path (or desc "youtube")))
+          (t (format "https://youtu.be/%s" path)))))
+#+end_src
+
+* Package Configuration
+** Company
+It's nice to have completions almost all the time, in my opinion. Key strokes
+are just waiting to be saved!
+#+begin_src emacs-lisp
+(after! company
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 2)
+#+end_src
+Now, the improvements from ~precedent~ are mostly from remembering history, so
+let's improve that memory.
+#+begin_src emacs-lisp
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+#+end_src
+*** Plain Text
+~Ispell~ is nice, let's have it in ~text~, ~markdown~, and ~GFM~.
+#+begin_src emacs-lisp
+(set-company-backend!
+  '(text-mode
+    markdown-mode
+    gfm-mode)
+  '(:seperate
+    company-ispell
+    company-files
+    company-yasnippet))
+#+end_src
+We then configure the dictionary we're using in [[*Ispell][Ispell]].
+** EVIL
+When I want to make a substitution, I want it to be global more often than not
+--- so let's make that the default.
+#+begin_src emacs-lisp
+(after! evil (setq evil-ex-substitute-global t)) ; I like my s/../.. to by global by default
+#+end_src
+** Ivy
+While in an ivy mini-buffer =C-o= shows a list of all possible actions one may take.
+By default this is ~#'ivy-read-action-by-key~ however a better interface to this
+is using Hydra.
+#+begin_src emacs-lisp
+(setq ivy-read-action-function #'ivy-hydra-read-action)
+#+end_src
+
+Increase the maximum number of items ivy will sort to 40k + a bit, this way
+=SPC h f= et al. will continue to function as expected until that number.
+#+begin_src emacs-lisp
+(setq ivy-sort-max-size 50000)
+#+end_src
+** Smart Parentheses
+#+begin_src emacs-lisp
+(sp-local-pair
+ '(org-mode)
+ "<<" ">>"
+ :actions '(insert))
+#+end_src
+** Tramp
+Let's try to make tramp handle prompts better
+#+begin_src emacs-lisp
+(after! tramp
+  (setenv "SHELL" "/bin/bash")
+  (setq tramp-shell-prompt-pattern "\\(?:^\\|\\)[^]#$%>\n]*#?[]#$%>] *\\(\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
+#+end_src
+** Which-key
+Let's make this popup a bit faster
+#+begin_src emacs-lisp
+(setq which-key-idle-delay 0.44) ;; I need the help, I really do
+#+end_src
+** YASnippet
+Nested snippets are good, enable that.
+#+begin_src emacs-lisp
+(setq yas-triggers-in-field t)
+#+end_src
+
+* Indentation
+#+begin_src emacs-lisp
+ web-mode-markup-indent-offset 2
+ web-mode-code-indent-offset 2
+ web-mode-css-indent-offset 2
+ js-indent-level 2
+ typescript-indent-level 2
+ css-indent-offset 2
+ json-reformat:indent-width 2
+ +format-on-save-enabled-modes
+      '(not emacs-lisp-mode             ; elisp's mechanisms are good enough
+            sql-mode                    ; sqlformat is currently broken
+            tex-mode                    ; latexindent is broken
+            latex-mode
+            php-mode))
+#+end_src
+
+
+* Font
+ Doom exposes five (optional) variables for controlling fonts in Doom. Here
+ are the three important ones:
+ + `doom-font'
+ + `doom-variable-pitch-font'
+ + `doom-big-font' -- used for `doom-big-font-mode'; use this for presentations or streaming.
+ =(setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light) doom-variable-pitch-font (font-spec :family "sans" :size 13))=
+
+#+begin_src emacs-lisp
+(after! doom-themes
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
+(custom-set-faces!
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
+#+end_src
+
+* Eval
+#+begin_src emacs-lisp
+(set-eval-handler! 'php-mode
+  '((:command     . "php")
+    (:exec        . "%c -r %s")
+    (:description . "Run php script")))
+#+end_src
+
+* Eshell
+#+begin_src emacs-lisp
+(setq shell-file-name "/bin/bash"
+      eshell-history-size 5000
+      eshell-buffer-maximum-lines 5000
+      eshell-hist-ignoredups t
+      eshell-scroll-to-bottom-on-input t
+      eshell-destroy-buffer-when-process-dies t
+      eshell-visual-commands'("bash" "htop" "ssh" "zsh")
+      vterm-max-scrollback 5000)
+(map! :leader
+      :desc "Counsel eshell history"
+      "e h" #'counsel-esh-history)
+#+end_src
+
+* Keybinds
+#+begin_src emacs-lisp
+(after! doom
+  (setq <d></d>oom-localleader-key ","))
+
+(map! :leader
+      :desc "Magit Status"
+      "g s" #'magit-status)
+(map! :ne "M-/" #'comment-or-uncomment-region)
+
+;; Register keys, useful?
+(map! :leader
+      :desc "Copy to register"
+      "r c" #'copy-to-register
+      :leader
+      :desc "Frameset to register"
+      "r f" #'frameset-to-register
+      :leader
+      :desc "Insert contents of register"
+      "r i" #'insert-register
+      :leader
+      :desc "Jump to register"
+      "r j" #'jump-to-register
+      :leader
+      :desc "List registers"
+      "r l" #'list-registers
+      :leader
+      :desc "Number to register"
+      "r n" #'number-to-register
+      :leader
+      :desc "Interactively choose a register"
+      "r r" #'counsel-register
+      :leader
+      :desc "View a register"
+      "r v" #'view-register
+      :leader
+      :desc "Window configuration to register"
+      "r w" #'window-configuration-to-register
+      :leader
+      :desc "Increment register"
+      "r +" #'increment-register
+      :leader
+      :desc "Point to register"
+      "r SPC" #'point-to-register)
+#+end_src
