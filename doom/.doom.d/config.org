@@ -22,13 +22,22 @@ for more info).
 (setq doom-theme 'doom-one)
 (setq org-directory "~/org/")
 (setq display-line-numbers-type nil)
+
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (if (eq
+         (if (numberp alpha)
+             alpha
+           (cdr alpha)) ; may also be nil
+         100)
+        (set-frame-parameter nil 'alpha '(95 . 90))
+      (set-frame-parameter nil 'alpha '(100 . 100)))))
 #+end_src
 
 * Org
 #+begin_src emacs-lisp
 (after! org
-  (require 'org-bullets)  ; Nicer bullets in org-mode
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   (setq org-directory "~/org/"
         org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
@@ -105,13 +114,27 @@ allowfullscreen>%s</iframe>" path (or "" desc)))
 #+end_src
 
 * Package Configuration
+** Eshell
+#+begin_src emacs-lisp
+(setq shell-file-name "/bin/bash"
+      eshell-history-size 5000
+      eshell-buffer-maximum-lines 5000
+      eshell-hist-ignoredups t
+      eshell-scroll-to-bottom-on-input t
+      eshell-destroy-buffer-when-process-dies t
+      eshell-visual-commands'("bash" "htop" "ssh" "zsh")
+      vterm-max-scrollback 5000)
+(map! :leader
+      :desc "Counsel eshell history"
+      "e h" #'counsel-esh-history)
+#+end_src
 ** Company
 It's nice to have completions almost all the time, in my opinion. Key strokes
 are just waiting to be saved!
 #+begin_src emacs-lisp
 (after! company
   (setq company-idle-delay 0.2
-        company-minimum-prefix-length 2)
+        company-minimum-prefix-length 2))
 #+end_src
 Now, the improvements from ~precedent~ are mostly from remembering history, so
 let's improve that memory.
@@ -178,22 +201,20 @@ Nested snippets are good, enable that.
 
 * Indentation
 #+begin_src emacs-lisp
- web-mode-markup-indent-offset 2
- web-mode-code-indent-offset 2
- web-mode-css-indent-offset 2
- js-indent-level 2
- typescript-indent-level 2
- css-indent-offset 2
- json-reformat:indent-width 2
- +format-on-save-enabled-modes
+(setq web-mode-code-indent-offset 2
+      web-mode-css-indent-offset 2
+      js-indent-level 2
+      typescript-indent-level 2
+      css-indent-offset 2
+      json-reformat:indent-width 2
+      +format-on-save-enabled-modes
       '(not emacs-lisp-mode             ; elisp's mechanisms are good enough
             sql-mode                    ; sqlformat is currently broken
             tex-mode                    ; latexindent is broken
             latex-mode
             php-mode))
 #+end_src
-
-
+    
 * Font
  Doom exposes five (optional) variables for controlling fonts in Doom. Here
  are the three important ones:
@@ -210,7 +231,7 @@ Nested snippets are good, enable that.
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
 #+end_src
-
+    
 * Eval
 #+begin_src emacs-lisp
 (set-eval-handler! 'php-mode
@@ -219,26 +240,15 @@ Nested snippets are good, enable that.
     (:description . "Run php script")))
 #+end_src
 
-* Eshell
-#+begin_src emacs-lisp
-(setq shell-file-name "/bin/bash"
-      eshell-history-size 5000
-      eshell-buffer-maximum-lines 5000
-      eshell-hist-ignoredups t
-      eshell-scroll-to-bottom-on-input t
-      eshell-destroy-buffer-when-process-dies t
-      eshell-visual-commands'("bash" "htop" "ssh" "zsh")
-      vterm-max-scrollback 5000)
-(map! :leader
-      :desc "Counsel eshell history"
-      "e h" #'counsel-esh-history)
-#+end_src
-
 * Keybinds
 #+begin_src emacs-lisp
 (after! doom
-  (setq <d></d>oom-localleader-key ","))
+  (setq doom-localleader-key ","))
 
+
+(map! :leader
+      :desc "Toggle transparency"
+      "t T" #'toggle-transparency)
 (map! :leader
       :desc "Magit Status"
       "g s" #'magit-status)
