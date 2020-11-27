@@ -161,6 +161,10 @@ When I want to make a substitution, I want it to be global more often than not
 #+begin_src emacs-lisp
 (after! evil (setq evil-ex-substitute-global t)) ; I like my s/../.. to by global by default
 #+end_src
+** Evil-cleverparens
+#+begin_src emacs-lisp
+(setq evil-cleverparens-use-additional-movement-keys nil)
+#+end_src
 ** Ivy
 While in an ivy mini-buffer =C-o= shows a list of all possible actions one may take.
 By default this is ~#'ivy-read-action-by-key~ however a better interface to this
@@ -198,7 +202,13 @@ Nested snippets are good, enable that.
 #+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
 #+end_src
-
+* Language Configuration
+** Php
+#+begin_src emacs-lisp
+(add-hook! php-mode-hook #'(smartparens-mode))
+;; Settings for cakephp filetypes.
+(add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
+#+end_src
 * Indentation
 #+begin_src emacs-lisp
 (setq web-mode-code-indent-offset 2
