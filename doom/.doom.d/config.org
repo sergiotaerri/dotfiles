@@ -208,6 +208,22 @@ Nested snippets are good, enable that.
 (add-hook! php-mode-hook #'(smartparens-mode))
 ;; Settings for cakephp filetypes.
 (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
+
+;;PHP quick doc lookup
+(defun my-php-symbol-lookup ()
+  (interactive)
+  (let ((symbol (symbol-at-point)))
+    (if (not symbol)
+        (message "No symbol at point.")
+
+      (browse-url (concat "http://php.net/manual-lookup.php?pattern="
+                          (symbol-name symbol))))))
+
+(map!
+ :mode php-mode
+ :n
+ :desc "Go to php doc webpage"
+ "g h" #'my-php-symbol-lookup)
 #+end_src
 * Indentation
 #+begin_src emacs-lisp
