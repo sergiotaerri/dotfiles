@@ -20,10 +20,13 @@ for more info).
       :desc "Open treemacs on current file"
       "p t" #'treemacs-find-file)
 
-;; not working, why?
+(defun goto-private-config-org-file ()
+  (interactive)
+  (find-file (expand-file-name "config.org" doom-private-dir)))
+
 (map! :leader
       :desc "Open config.org private config"
-      "f P")
+      "f P" #'goto-private-config-org-file)
 
 (map! :leader
       :mode treemacs-mode
@@ -297,6 +300,16 @@ Nested snippets are good, enable that.
       :desc "Magit Status"
       "g s" #'magit-status)
 (map! :ne "M-/" #'comment-or-uncomment-region)
+
+(map! :g
+      :desc "Switch window layout"
+      "C-<up>" #'ivy-switch-view
+      :g
+      :desc "Push window layout"
+      "C-<down>" #'ivy-push-view
+      :g
+      :desc "Pop window layout"
+      "C-S-<down>" #'ivy-pop-view)
 
 ;; Register keys, useful?
 (map! :leader
