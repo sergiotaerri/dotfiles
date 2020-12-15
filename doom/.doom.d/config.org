@@ -224,6 +224,17 @@ Nested snippets are good, enable that.
 (setq yas-triggers-in-field t)
 #+end_src
 * Language Configuration
+** Clojure
+
+#+begin_src emacs-lisp
+(map! :map lispy-mode-map
+      :i "[" #'lispy-brackets ;; not a true lisp
+      :i "]" #'self-insert-command)
+
+;; Repl Configuration
+(after! cider (set-popup-rule! "^\\*cider-repl" :side 'right :actions '(display-buffer-in-side-window) :select t :modeline t :size 0.44 :quit nil))
+#+end_src
+
 ** Php
 #+begin_src emacs-lisp
 (add-hook! php-mode-hook #'(smartparens-mode))
