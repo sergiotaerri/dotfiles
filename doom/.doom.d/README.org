@@ -20,6 +20,7 @@ Most of the documenting is done in the config.org file.
 + Php specific
 
 #+BEGIN_SRC sh :dir /sudo:: :tangle (if (doom-system-os 'arch) "yes")
+# Some external dependencies 
 sudo pacman --needed --noconfirm -S php composer  # or php53, php54, php55
 
 # If you use intelephense:
@@ -27,6 +28,10 @@ sudo pacman -S nodejs npm
 
 # For formating
 sudo npm install -g prettier @prettier/plugin-php
+
+# Fonts
+sudo pacman ttf-inconsolata ttf-ibm-plex
+
 
 #Optional dependencies
 composer global require \

@@ -53,3 +53,4 @@
 (package! tldr)
 (package! wc-mode)
 (package! org-bullets)
+(package! doct)
