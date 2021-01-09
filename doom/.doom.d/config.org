@@ -11,10 +11,19 @@ for more info).
 * Better defaults
 #+begin_src emacs-lisp
 (setq
- projectile-project-search-path '("~/Documents/php ~/Documents/clj")
- +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
- ;;what variable do i use? org-bullets-bullet-list '("⁖")
- dired-dwim-target t)
+    projectile-project-search-path '("~/Documents/php ~/Documents/clj")
+    +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
+    dired-dwim-target t
+    evil-vsplit-window-right t
+    evil-split-window-below t)
+
+
+
+(if (eq initial-window-system 'x)                 ; if started by emacs command or desktop file
+    (toggle-frame-maximized)
+  (toggle-frame-fullscreen))
+
+
 
 (map! :leader
       :desc "Open treemacs on current file"
@@ -36,8 +45,8 @@ for more info).
 
 * Theming and Layout
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-one)
-(setq org-directory "~/org/")
+(setq doom-theme 'doom-vibrant)
+(setq org-directory "~/Documents/org/")
 (setq display-line-numbers-type nil)
 
 (defun toggle-transparency ()
@@ -56,7 +65,7 @@ for more info).
   (setq org-directory "~/org/"
         org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
-        org-ellipsis " ▼ "
+        ;; org-ellipsis " ▼ "
         org-log-done 'time
         org-journal-dir "~/org/journal/"
         org-journal-date-format "%B %d, %Y (%A)"
@@ -69,7 +78,10 @@ for more info).
           ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
           ("ddg" . "https://duckduckgo.com/?q=")
           ("wiki" . "https://en.wikipedia.org/wiki/"))
-        )) ; Task has been cancelled
+        ))
+
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("⬥" "•" "⬝")))
 #+end_src
 
 ** Spellcheck
@@ -247,7 +259,6 @@ Nested snippets are good, enable that.
   (let ((symbol (symbol-at-point)))
     (if (not symbol)
         (message "No symbol at point.")
-
       (browse-url (concat "http://php.net/manual-lookup.php?pattern="
                           (symbol-name symbol))))))
 
@@ -255,17 +266,16 @@ Nested snippets are good, enable that.
 (defun my-cake-string-lookup ()
   (interactive)
   (browse-url (concat "https://book.cakephp.org/1.3/en/search.html?check_keywords=yes&area=default&q="
-(read-string "Search in cake 1.3 doc:"))))
+                      (read-string "Search in cake 1.3 doc:"))))
 
 (map!
  :map php-mode-map
- :n
- :prefix "g h"
  :desc "Go to php doc webpage"
- "h" #'my-php-symbol-lookup
+ :n
+ "g h" #'my-php-symbol-lookup
  :localleader
  :prefix "h"
- :desc "Search something in cake 1.3 doc"
+ :desc "Search in cake 1.3 doc"
  "c" #'my-cake-string-lookup)
 #+end_src
 * Indentation
@@ -299,6 +309,11 @@ Nested snippets are good, enable that.
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
+
+(setq doom-font (font-spec :family "Inconsolata" :size 16)
+      doom-big-font (font-spec :family "Inconsolata" :weight 'semi-bold :size 36)
+      doom-variable-pitch-font (font-spec :family "IBM Plex Mono" :weight 'light :size 16)
+      doom-serif-font (font-spec :family "IBM Plex Serif" :weight 'light))
 #+end_src
     
 * Eval
