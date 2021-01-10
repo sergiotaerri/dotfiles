@@ -28,6 +28,7 @@ sudo pacman -S nodejs npm
 
 # For formating
 sudo npm install -g prettier @prettier/plugin-php
+sudo npm install -g typescript typescript-language-server eslint
 
 # Fonts
 sudo pacman ttf-inconsolata ttf-ibm-plex

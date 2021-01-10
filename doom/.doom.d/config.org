@@ -86,6 +86,7 @@ For bug in [[issue][https://github.com/seagle0128/doom-modeline/issues/300]]
           ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
           ("ddg" . "https://duckduckgo.com/?q=")
           ("wiki" . "https://en.wikipedia.org/wiki/"))
+        org-download-image-attr-list '("#attr_org: :width 300")
         ))
 
 (after! org-superstar
@@ -578,7 +579,7 @@ Nested snippets are good, enable that.
 #+begin_src emacs-lisp
 (add-hook! php-mode-hook #'(smartparens-mode))
 ;; Settings for cakephp filetypes.
-(add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '(("\\.ctp\\'" . web-mode)))
 
 ;;PHP quick doc lookup
 (defun my-php-symbol-lookup ()
@@ -604,6 +605,9 @@ Nested snippets are good, enable that.
  :prefix "h"
  :desc "Search in cake 1.3 doc"
  "c" #'my-cake-string-lookup)
+#+end_src
+** Typescript
+#+begin_src emacs-lisp
 #+end_src
 * Indentation
 #+begin_src emacs-lisp
