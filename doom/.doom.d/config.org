@@ -10,12 +10,13 @@ for more info).
 
 * Better defaults
 #+begin_src emacs-lisp
-(setq
+(after! doom
+  (setq
     projectile-project-search-path '("~/Documents/php ~/Documents/clj")
     +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
     dired-dwim-target t
     evil-vsplit-window-right t
-    evil-split-window-below t)
+    evil-split-window-below t))
 
 
 
@@ -713,4 +714,9 @@ Nested snippets are good, enable that.
       :leader
       :desc "Point to register"
       "r SPC" #'point-to-register)
+
+
+(map! :desc "List of yanks"
+    :n
+    "M-p" #'counsel-yank-pop)
 #+end_src
