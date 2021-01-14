@@ -7,16 +7,23 @@
 * Rudimentary configuration
 Make this file run (slightly) faster with lexical binding (see [[https://nullprogram.com/blog/2016/12/22/][this blog post]]
 for more info).
+#+begin_src emacs-lisp
+(defun my-coding-system-toggle ()
+  "Toggle beetween utf-8 and iso-8859-1 encoding"
+  (interactive)
+  (let ((current buffer-file-coding-system))
+    (cond
+     ((equal current 'utf-8) (setq! buffer-file-coding-system 'iso-8859-1))
+     ((equal current 'iso-8859-1) (setq! buffer-file-coding-system 'utf-8)))))
+#+end_src
 
 * Better defaults
 #+begin_src emacs-lisp
-(after! doom
-  (setq
-    projectile-project-search-path '("~/Documents/php ~/Documents/clj")
-    +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
-    dired-dwim-target t
-    evil-vsplit-window-right t
-    evil-split-window-below t))
+(setq projectile-project-search-path '("~/Documents/php ~/Documents/clj")
+      +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
+      dired-dwim-target t
+      evil-vsplit-window-right t
+      evil-split-window-below t)
 
 
 
@@ -564,6 +571,45 @@ Nested snippets are good, enable that.
 #+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
 #+end_src
+** Firn
+#+begin_src emacs-lisp
+(setq enable-dir-local-variables t)
+(defun elken/find-time-property (property)
+  "Find the PROPETY in the current buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((first-heading
+           (save-excursion
+             (re-search-forward org-outline-regexp-bol nil t))))
+      (when (re-search-forward (format "^#\\+%s:" property) nil t)
+        (point)))))
+
+(defun elken/has-time-property-p (property)
+  "Gets the position of PROPETY if it exists, nil if not and empty string if it's undefined."
+  (when-let ((pos (elken/find-time-property property)))
+    (save-excursion
+      (goto-char pos)
+      (if (and (looking-at-p " ")
+               (progn (forward-char)
+                      (org-at-timestamp-p 'lax)))
+          pos
+        ""))))
+
+(defun elken/set-time-property (property &optional pos)
+  "Set the PROPERTY in the current buffer.
+Can pass the position as POS if already computed."
+  (when-let ((pos (or pos (elken/find-time-property property))))
+    (save-excursion
+      (goto-char pos)
+      (if (looking-at-p " ")
+          (forward-char)
+        (insert " "))
+      (delete-region (point) (line-end-position))
+      (let* ((now (format-time-string "<%Y-%m-%d %H:%M>")))
+        (insert now)))))
+
+(add-hook! 'before-save-hook (when (derived-mode-p 'org-mode) (elken/set-time-property "DATE_UPDATED")))
+#+end_src
 * Language Configuration
 ** Clojure
 
@@ -580,7 +626,7 @@ Nested snippets are good, enable that.
 #+begin_src emacs-lisp
 (add-hook! php-mode-hook #'(smartparens-mode))
 ;; Settings for cakephp filetypes.
-(add-to-list 'auto-mode-alist '(("\\.ctp\\'" . web-mode)))
+(add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
 
 ;;PHP quick doc lookup
 (defun my-php-symbol-lookup ()
@@ -717,6 +763,9 @@ Nested snippets are good, enable that.
 
 
 (map! :desc "List of yanks"
-    :n
-    "M-p" #'counsel-yank-pop)
+      :n
+      "M-p" #'counsel-yank-pop
+      :leader
+      :desc "Toggle latin-1/-utf-8"
+      "t e" #'my-coding-system-toggle)
 #+end_src
