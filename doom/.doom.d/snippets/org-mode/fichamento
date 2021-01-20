@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: fichamento
+# key: trigger-key
+# condition: t
+# --
+
+#+TITLE: Fichamento do artigo "${1:Título}"
+* $1
+
+** Do que se trata o artigo?
+  $0
+** Qual foi o objetivo do artigo?
+** Quais técnicas o artigo apresenta?
+** Quais as novidades dos resultados?
+** Qual problema o artigo se propôs a resolver?
+** O artigo traz quais conceitos sobre o assunto "$1"?
+** Qual foi a metodologia adotada no estudo? (teórica, experimental, etc.)
+** Quais foram os principais resultados?
+
