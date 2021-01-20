@@ -690,8 +690,10 @@ Can pass the position as POS if already computed."
 
 (setq doom-font (font-spec :family "Inconsolata" :size 16)
       doom-big-font (font-spec :family "Inconsolata" :weight 'semi-bold :size 36)
-      doom-variable-pitch-font (font-spec :family "IBM Plex Mono" :weight 'light :size 16)
-      doom-serif-font (font-spec :family "IBM Plex Serif" :weight 'light))
+      doom-variable-pitch-font (font-spec :family "IBM Plex Mono" :weight 'semi-light :size 16)
+      doom-serif-font (font-spec :family "IBM Plex Serif" :weight 'light)
+      ;; mixed-pitch-set-height t
+      +zen-text-scale 1)
 #+end_src
     
 * Eval
