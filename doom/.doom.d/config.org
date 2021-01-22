@@ -609,6 +609,41 @@ Can pass the position as POS if already computed."
         (insert now)))))
 
 (add-hook! 'before-save-hook (when (derived-mode-p 'org-mode) (elken/set-time-property "DATE_UPDATED")))
+** Writeroom
+For starters, I think Doom is a bit over-zealous when zooming in
+#+begin_src emacs-lisp
+(setq +zen-text-scale 0.6)
+#+end_src
+
+Now, Tecosaur thinks it would also be nice to remove line numbers and org stars in
+writeroom. So do I.
+#+begin_src emacs-lisp
+(after! writeroom-mode
+  (add-hook 'writeroom-mode-hook
+            (defun +zen-cleaner-org ()
+              (when (and (eq major-mode 'org-mode) writeroom-mode)
+                (setq-local -display-line-numbers display-line-numbers
+                            display-line-numbers nil)
+                (setq-local -org-indent-mode org-indent-mode)
+                (org-indent-mode -1)
+                (when (featurep 'org-superstar)
+                  (setq-local -org-superstar-headline-bullets-list org-superstar-headline-bullets-list
+                              ;; org-superstar-headline-bullets-list '("🙐" "🙑" "🙒" "🙓" "🙔" "🙕" "🙖" "🙗")
+                              ;; org-superstar-headline-bullets-list '("🙘" "🙙" "🙚" "🙛")
+                              org-superstar-headline-bullets-list '("")
+                              -org-superstar-remove-leading-stars org-superstar-remove-leading-stars
+                              org-superstar-remove-leading-stars t)
+                  (org-superstar-restart)))))
+  (add-hook 'writeroom-mode-disable-hook
+            (defun +zen-dirty-org ()
+              (when (eq major-mode 'org-mode)
+                (setq-local display-line-numbers -display-line-numbers)
+                ;; (when -org-indent-mode
+                ;;   (org-indent-mode 1))
+                (when (featurep 'org-superstar)
+                  (setq-local org-superstar-headline-bullets-list -org-superstar-headline-bullets-list
+                              org-superstar-remove-leading-stars -org-superstar-remove-leading-stars)
+                  (org-superstar-restart))))))
 #+end_src
 * Language Configuration
 ** Clojure
@@ -693,7 +728,7 @@ Can pass the position as POS if already computed."
       doom-variable-pitch-font (font-spec :family "IBM Plex Mono" :weight 'semi-light :size 16)
       doom-serif-font (font-spec :family "IBM Plex Serif" :weight 'light)
       ;; mixed-pitch-set-height t
-      +zen-text-scale 1)
+      )
 #+end_src
     
 * Eval
