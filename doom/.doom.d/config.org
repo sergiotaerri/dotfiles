@@ -691,6 +691,13 @@ writeroom. So do I.
 ** Typescript
 #+begin_src emacs-lisp
 #+end_src
+** Yaml
+The face for constants and keywords are white and white on these themes, sadly.
+#+begin_src emacs-lisp
+(add-hook! 'yaml-mode-hook
+  (custom-set-faces! '('doom-vibrant 'doom-one)
+    `(font-lock-variable-name-face :foreground ,(doom-color 'blue))))
+#+end_src
 * Indentation
 #+begin_src emacs-lisp
 (setq web-mode-code-indent-offset 2
