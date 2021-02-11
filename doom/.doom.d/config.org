@@ -98,7 +98,7 @@ For bug in [[issue][https://github.com/seagle0128/doom-modeline/issues/300]]
         ))
 
 (after! org-superstar
-  (setq org-superstar-headline-bullets-list '("⬥" "•" "⬝")))
+  (setq org-superstar-headline-bullets-list '( "•" "⬝")))
 #+end_src
 
 ** Spellcheck
