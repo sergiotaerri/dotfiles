@@ -31,7 +31,7 @@ sudo npm install -g prettier @prettier/plugin-php
 sudo npm install -g typescript typescript-language-server eslint
 
 # Fonts
-sudo pacman ttf-inconsolata ttf-ibm-plex
+sudo pacman -S ttf-inconsolata ttf-ibm-plex
 
 
 #Optional dependencies
