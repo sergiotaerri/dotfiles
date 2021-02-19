@@ -17,18 +17,7 @@ set $stoprec --no-startup-id dmenurecord kill
 set $shutdown sudo -A shutdown -h now
 set $reboot sudo -A reboot
 #use whisker-menu
-bindsym Mod$ 		exec --no-startup-id xfce4-popup-whiskermenu
-
-# #---Dropdown Windows---# #
-
-# First I have a tmux window used for background scripts.
-# I'll later bind this to mod+u.
-for_window [instance="tmuxdd"] floating enable
-for_window [instance="tmuxdd"] resize set 625 400
-for_window [instance="tmuxdd"] move scratchpad
-for_window [instance="tmuxdd"] border pixel 3
-for_window [instance="tmuxdd"] sticky enable
-
+bindsym $mod 		exec --no-startup-id xfce4-popup-whiskermenu
 
 # #---Starting External Scripts---# #
 # Setting the background and colorscheme:
@@ -36,8 +25,6 @@ for_window [instance="tmuxdd"] sticky enable
 
 # Composite manager:
 exec --no-startup-id compton --config ~/.config/compton/compton.conf
-# Runs the key remapping scripts
-##exec --no-startup-id ~/.scripts/remaps
 # Unclutter makes the mouse invisible after a brief period
 exec --no-startup-id unclutter
 
@@ -180,8 +167,6 @@ bindsym $mod+x			exec --no-startup-id "sh /home/trajanus/.scripts/lockscreen"
 #bindsym $mod+Shift+c 		exec --no-startup-id "sh /home/trajanus/.scripts/camtoggle"
 ##
 
-bindsym $mod+c			exec $term -e setxkbmap br 
-
 bindsym $mod+v			exec $term -e ncmpcpp -s visualizer
 bindsym $mod+Shift+v		exec --no-startup-id VirtualBox
 
@@ -250,7 +235,10 @@ for_window [title="Default - Wine desktop"] floating enable
 
 
 #Assign apps to open in workspace
-assign [class="firefox"]    $workspace1
+assign [class="emacs"]			$ws1 
+assign [class="firefox"]		$ws3
+assign [class="discord"]		$ws10
+assign [class="TelegramDesktop"]	$ws10
 
 for_window [title="Copying"] floating enable  
 for_window [title="Deleting"] floating enable  
