@@ -53,7 +53,7 @@ for more info).
 
 * Theming and Layout
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-tomorrow-night)
 (delq! t custom-theme-load-path)
 
 (custom-set-faces!
@@ -699,6 +699,22 @@ The face for constants and keywords are white and white on these themes, sadly.
   (custom-set-faces! '('doom-vibrant 'doom-one)
     `(font-lock-variable-name-face :foreground ,(doom-color 'blue))))
 #+end_src
+** Lsp-ui
+#+begin_src emacs-lisp
+(after! lsp-ui
+  (setq lsp-ui-doc-enable t
+        lsp-ui-sideline-show-code-actions nil
+        lsp-ui-sideline-show-diagnostics t
+        lsp-ui-peek-enable t
+        lsp-ui-sideline-delay 0.4
+        lsp-ui-doc-max-height 40
+        lsp-ui-doc-max-width 80
+        lsp-ui-doc-position 'bottom
+        lsp-ui-doc-delay 2))
+
+(map! :leader
+      "j i" #'lsp-ui-imenu)
+#+end_src
 * Indentation
 #+begin_src emacs-lisp
 (setq web-mode-code-indent-offset 2
@@ -749,8 +765,9 @@ The face for constants and keywords are white and white on these themes, sadly.
 
 * Keybinds
 #+begin_src emacs-lisp
-(after! doom
-  (setq doom-localleader-key ","))
+;; Solve conflict doom-leader with evil-snipe
+(setq evil-snipe-override-evil-repeat-keys nil)
+(setq doom-localleader-key ",")
 
 
 (map! :leader
@@ -813,4 +830,8 @@ The face for constants and keywords are white and white on these themes, sadly.
       :leader
       :desc "Toggle latin-1/-utf-8"
       "t e" #'my-coding-system-toggle)
+(map!
+ :desc "Expand region transient state"
+ :v
+ "." 'er/expand-region)
 #+end_src
