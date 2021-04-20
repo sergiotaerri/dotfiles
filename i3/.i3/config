@@ -26,7 +26,7 @@ bindsym $mod 		exec --no-startup-id xfce4-popup-whiskermenu
 
 # Composite manager:
 # exec --no-startup-id compton --config ~/.config/compton/compton.conf
-exec --no-startup-id picom --config ~/.config/compton/compton.conf
+# exec --no-startup-id picom --config ~/.config/picom/picom.conf
 # Unclutter makes the mouse invisible after a brief period
 exec --no-startup-id unclutter
 
@@ -85,12 +85,7 @@ bindsym $mod+space		focus mode_toggle
 
 bindsym $mod+Shift+Tab		workspace prev
 bindsym $mod+Tab		workspace next
-##bindsym $mod+Shift+Escape 	exec --no-startup-id "sh /home/trajanus/.scripts/prompt 'Exit i3?' 'i3-msg exit'"
 
-#bindsym $mod+Spacebar           exec --no-startup-id "rofi -show run"
-# bindsym $mod+BackSpace
-#bindsym $mod+Shift+BackSpace	exec --no-startup-id "sh /home/trajanus/.scripts/prompt 'Reboot computer?' '$reboot'"
-#
 bindsym $mod+grave		exec --no-startup-id dmenuunicode
 ##bindsym $mod+asciitilde
 
