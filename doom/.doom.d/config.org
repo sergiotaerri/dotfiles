@@ -15,6 +15,10 @@ for more info).
     (cond
      ((equal current 'utf-8) (setq! buffer-file-coding-system 'iso-8859-1))
      ((equal current 'iso-8859-1) (setq! buffer-file-coding-system 'utf-8)))))
+;; Make tab completion work
+(map! :after vterm
+    :map vterm-mode-map
+    :ni "<tab>" #'vterm-send-tab)
 #+end_src
 
 * Better defaults
