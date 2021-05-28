@@ -1,0 +1,4 @@
+#+TITLE: Personal dotfiles
+This is repository contains some of my [[https://github.com/aspiers/stow][GNU Stow]]  powered dotfiles dotfiles, relevant information is kept either in-code or in README.org at the configuration root path.
+
+Also accompanies a small [[file:./install][script]] for running installing doomemacs while running stow on every folder afterwards.

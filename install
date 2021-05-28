@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 
 if [ ! -d ~/.emacs.d ]; then
-git clone --depth 10 --branch develop --single-branch https://github.com/syl20bnr/spacemacs ~/.emacs.d
+	# git clone --depth 10 --branch develop --single-branch https://github.com/syl20bnr/spacemacs ~/.emacs.d
+	git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+	~/.emacs.d/bin/doom install
 fi
 
 for dir in */
