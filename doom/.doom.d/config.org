@@ -660,6 +660,9 @@ writeroom. So do I.
 
 ;; Repl Configuration
 (after! cider (set-popup-rule! "^\\*cider-repl" :side 'right :actions '(display-buffer-in-side-window) :select t :modeline t :size 0.44 :quit nil))
+
+;; Hideous lispyville 'special context functionality'
+(setq! lispy-mode-map-special nil)
 #+end_src
 
 ** Php
@@ -689,7 +692,7 @@ writeroom. So do I.
  :n
  "g h" #'my-php-symbol-lookup
  :localleader
- :prefix "h"
+ (:prefix ("h" . "help"))
  :desc "Search in cake 1.3 doc"
  "c" #'my-cake-string-lookup)
 #+end_src
