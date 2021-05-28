@@ -172,5 +172,16 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]] \
 fi
 #end of vterm config
 
+
+if [ -f /opt/asdf-vm/asdf.sh ]; then
+  export ASDF_DIR=/opt/asdf-vm
+  export ASDF_CONFIG_FILE=$XDG_CONFIG_HOME/asdf/asdfrc
+  export ASDF_DATA_DIR=$XDG_DATA_HOME/asdf
+  source $ASDF_DIR/asdf.sh
+
+  # Not needed autocompletion setup
+fi
+
 alias vim='nvim' \
-	k='kubectl'
+	k='kubectl' \
+    de='docker exec -it'
