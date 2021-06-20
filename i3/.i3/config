@@ -18,7 +18,7 @@ set $stoprec --no-startup-id dmenurecord kill
 set $shutdown sudo -A shutdown -h now
 set $reboot sudo -A reboot
 #use whisker-menu
-bindsym $mod 		exec --no-startup-id xfce4-popup-whiskermenu
+bindsym $mod+d 		exec --no-startup-id xfce4-popup-whiskermenu
 
 # #---Starting External Scripts---# #
 # Setting the background and colorscheme:
@@ -130,7 +130,7 @@ bindsym $mod+Shift+a		exec $term -e pulsemixer
 bindsym $mod+s			gaps inner current plus 5; gaps inner current plus 5
 bindsym $mod+Shift+s		gaps inner current minus 5; gaps inner current minus 5
 
-bindsym $mod+d			exec --no-startup-id dmenu_run
+#bindsym $mod+d			exec --no-startup-id dmenu_run
 bindsym $mod+Shift+d		exec --no-startup-id xfce4-appfinder
 
 bindsym $mod+f			fullscreen toggle
@@ -247,11 +247,11 @@ no_focus [title="mpvfloat"]
 # #---Function Buttons---# #
 #bindsym $mod+F1		exec --no-startup-id zathura ~/.config/i3/i3_guide.pdf
 bindsym $mod+F2		restart
-bindsym $mod+F3		exec --no-startup-id displayselect
-bindsym $mod+F4		exec --no-startup-id prompt "Hibernate computer?" "$hibernate"
-bindsym $mod+F5		exec --no-startup-id $netrefresh
-bindsym $mod+F6		exec --no-startup-id $term -e transmission-remote-cli
-bindsym $mod+F7		exec --no-startup-id td-toggle
+#bindsym $mod+F3		exec --no-startup-id displayselect
+#bindsym $mod+F4		exec --no-startup-id prompt "Hibernate computer?" "$hibernate"
+#bindsym $mod+F5		exec --no-startup-id $netrefresh
+#bindsym $mod+F6		exec --no-startup-id $term -e transmission-remote-cli
+#bindsym $mod+F7		exec --no-startup-id td-toggle
 #bindsym $mod+F8		exec --no-startup-id ~/.config/mutt/etc/mailsync.sh
 #bindsym $mod+F9		exec --no-startup-id dmenumount
 #bindsym $mod+F10	exec --no-startup-id dmenuumount
@@ -261,10 +261,10 @@ bindsym $mod+F12	exec $term -e sudo -A wifi-menu
 # #---Arrow Keys---# #
 bindsym $mod+Left		focus left
 bindsym $mod+Down		focus down
-bindsym $mod+Up		focus up
+bindsym $mod+Up			focus up
 bindsym $mod+Right 		focus right
-bindsym $mod+Shift+Left	move left
-bindsym $mod+Shift+Down	move down
+bindsym $mod+Shift+Left		move left
+bindsym $mod+Shift+Down		move down
 bindsym $mod+Shift+Up		move up
 bindsym $mod+Shift+Right 	move right
 
@@ -315,5 +315,6 @@ exec_always --no-startup-id ~/.scripts/monitors.sh
 #exec_always --no-startup-id ~/.scripts/wallpapers.sh
 #exec --no-startup-id betterlockscreen -w dim
 #exec --no-startup-id xfce4-power-manager
+exec_always --no-startup-id autotiling
 
 popup_during_fullscreen smart
