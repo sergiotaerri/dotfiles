@@ -1,0 +1,11 @@
+[Unit]
+Description=Monitor xfce panel hotplug
+
+[Service]
+Type=simple
+RemainAfterExit=no
+User=serjo
+ExecStart=/usr/bin/bash /home/serjo/.local/bin/hotplug_monitor.sh
+
+[Install]
+WantedBy=multi-user.target
