@@ -751,6 +751,13 @@ writeroom. So do I.
           org-roam-ui-open-on-start t))
 
 #+end_src
+** Org-tree-slide
+#+begin_src emacs-lisp
+(after! org
+  (setq!
+   +org-present-text-scale 1.2
+   ))
+#+end_src
 * Language Configuration
 ** Clojure
 
