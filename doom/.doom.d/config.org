@@ -756,7 +756,14 @@ writeroom. So do I.
 (after! org
   (setq!
    +org-present-text-scale 1.2
-   ))
+   )
+  (map! :map org-tree-slide-mode-map
+        :n [next] #'org-tree-slide-move-next-tree
+        :n [prior]  #'org-tree-slide-move-previous-tree
+        :n [mouse-1] #'org-tree-slide-move-next-tree
+        :n [mouse-2]  #'org-tree-slide-move-previous-tree ;; Bugs out and deletes content, conflict with mouse-save-then-kill
+        )
+  )
 #+end_src
 * Language Configuration
 ** Clojure
