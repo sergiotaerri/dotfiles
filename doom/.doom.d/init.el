@@ -149,6 +149,7 @@
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org
+        +roam2
         +present
         +dragndrop
         +pretty)
