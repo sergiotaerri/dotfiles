@@ -756,6 +756,7 @@ writeroom. So do I.
 (after! org
   (setq!
    +org-present-text-scale 1.2
+   org-tree-slide-fold-subtrees-skipped nil
    )
   (map! :map org-tree-slide-mode-map
         :n [next] #'org-tree-slide-move-next-tree
@@ -773,8 +774,11 @@ writeroom. So do I.
       :i "[" #'lispy-brackets ;; not a true lisp
       :i "]" #'self-insert-command)
 
+(map! :leader
+      "p z" #'projectile-toggle-between-implementation-and-test)
+
 ;; Repl Configuration
-(after! cider (set-popup-rule! "^\\*cider-repl" :side 'right :actions '(display-buffer-in-side-window) :select t :modeline t :size 0.44 :quit nil))
+(after! cider (set-popup-rule! "^\\*cider-repl" :side 'right :actions '(display-buffer-in-side-window) :select t :modeline t :size 0.33 :quit nil))
 
 ;; Hideous lispyville 'special context functionality'
 (setq! lispy-mode-map-special nil)
