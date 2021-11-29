@@ -182,6 +182,9 @@ if [ -f /opt/asdf-vm/asdf.sh ]; then
   # Not needed autocompletion setup
 fi
 
+
+eval "$(phpenv init -)"
+alias doom="$HOME/.emacs.d/bin/doom"
 alias vim='nvim' \
 	k='kubectl' \
     de='docker exec -it'

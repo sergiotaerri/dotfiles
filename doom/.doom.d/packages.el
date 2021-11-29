@@ -55,6 +55,6 @@
 (package! org-bullets)
 (package! doct)
 (package! websocket)
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+(package! org-roam-ui :recipe (:build (:not native-compilation) :host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 ;; workaround  for https://github.com/emacs-mirror/emacs/commit/86da812afb2572c7fead2bb07570b976bffd7c55
 (package! xref :pin "a82f459b37b31546bf274388baf8aca79e9c30d9")
