@@ -698,8 +698,16 @@ writeroom. So do I.
 (map! :i
       "C-c i" (lambda () (interactive) (org-roam-node-insert)))
 
+(setq my/org-roam-excluded-dirs '("archive"))
+
 (after! org-roam
   (setq  org-roam-graph-exclude-matcher '("daily/")
+         org-roam-db-node-include-function
+         (lambda ()
+           (let* ((file-path (buffer-file-name (buffer-base-buffer)))
+                  (rel-file-path (f-relative file-path org-roam-directory))
+                  (parent-directories (butlast (f-split rel-file-path))))
+             (if (cl-intersection my/org-roam-excluded-dirs parent-directories :test #'string=) nil t)))
          org-roam-dailies-capture-templates
          '(
            ("d" "default" entry "** %U\n%?\n" :if-new
