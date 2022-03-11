@@ -791,7 +791,22 @@ writeroom. So do I.
 ;; Hideous lispyville 'special context functionality'
 (setq! lispy-mode-map-special nil)
 #+end_src
+*** Workflow-specific configuration
+#+begin_src emacs-lisp
+(defun cider-nrepl-reset ()
+  (interactive)
+  (cider-switch-to-repl-buffer)
+  (goto-char (point-max))
+  (insert "(user/reset)")
+  (cider-repl-closing-return)
+  (cider-switch-to-last-clojure-buffer))
 
+(map! :map clojure-mode-map
+      :localleader
+      :desc "Reload modified project files a la 'reloaded workflow'"
+      :n "r p" #'cider-nrepl-reset)
+
+#+end_src
 ** Php
 #+begin_src emacs-lisp
 (add-hook! php-mode-hook #'(smartparens-mode))
