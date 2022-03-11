@@ -806,6 +806,9 @@ writeroom. So do I.
       :desc "Reload modified project files a la 'reloaded workflow'"
       :n "r p" #'cider-nrepl-reset)
 
+(map! :map cider-inspector-mode-map
+      :desc "Refreshes the inspector view"
+      :n "r" #'cider-inspector-refresh)
 #+end_src
 ** Php
 #+begin_src emacs-lisp
