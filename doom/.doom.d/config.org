@@ -797,7 +797,7 @@ writeroom. So do I.
   (interactive)
   (cider-switch-to-repl-buffer)
   (goto-char (point-max))
-  (insert "(user/reset)")
+  (insert "(com.stuartsierra.component.user-helpers/reset)")
   (cider-repl-closing-return)
   (cider-switch-to-last-clojure-buffer))
 
