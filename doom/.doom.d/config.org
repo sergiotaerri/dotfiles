@@ -801,14 +801,22 @@ writeroom. So do I.
   (cider-repl-closing-return)
   (cider-switch-to-last-clojure-buffer))
 
-(map! :map clojure-mode-map
-      :localleader
-      :desc "Reload modified project files a la 'reloaded workflow'"
-      :n "r p" #'cider-nrepl-reset)
+(after!
+  (clojure-mode cider-mode)
 
-(map! :map cider-inspector-mode-map
-      :desc "Refreshes the inspector view"
-      :n "r" #'cider-inspector-refresh)
+  (add-to-list 'cider-test-defining-forms "defflow")
+
+  (map! :map clojure-mode-map
+        :localleader
+        :desc "Reload modified project files a la 'reloaded workflow'"
+        :n "r p" #'cider-nrepl-reset)
+
+  (map! :map cider-inspector-mode-map
+        :desc "Refreshes the inspector view"
+        :n "r" #'cider-inspector-refresh)
+
+  (add-hook 'before-save-hook 'cider-format-buffer t t)
+  )
 #+end_src
 ** Php
 #+begin_src emacs-lisp

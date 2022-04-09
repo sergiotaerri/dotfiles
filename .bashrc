@@ -184,6 +184,7 @@ fi
 
 
 eval "$(phpenv init -)"
+eval "$(direnv hook bash)"
 alias doom="$HOME/.emacs.d/bin/doom"
 alias vim='nvim' \
 	k='kubectl' \
