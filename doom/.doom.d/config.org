@@ -20,7 +20,12 @@ for more info).
     :map vterm-mode-map
     :ni "<tab>" #'vterm-send-tab)
 #+end_src
-
+** Workarounds
+*** FIXME For the bug introduced in emacs 29 around `describe key`.
+#+begin_src emacs-lisp
+(after! elisp-refs
+  (defvar read-symbol-positions-list ()))
+#+end_src
 * Better defaults
 #+begin_src emacs-lisp
 (setq projectile-project-search-path '("~/Documents/php ~/Documents/clj")
