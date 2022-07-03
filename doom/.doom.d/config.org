@@ -746,6 +746,87 @@ writeroom. So do I.
         )
   )
 #+end_src
+** Emacs-slack
+*** BP Slack configuration
+#+begin_src emacs-lisp
+(after! slack
+  (auth-source-forget-all-cached)
+  (slack-register-team
+   :name "slack-brasil-paralelo.slack.com"
+   :default t
+   :token (auth-source-pick-first-password
+           :host "slack-brasil-paralelo.slack.com"
+           :user "sergio.santos@brasilparalelo.com.br")
+   :cookie (auth-source-pick-first-password
+            :host "slack-brasil-paralelo.slack.com"
+            :user "sergio.santos@brasilparalelo.com.br_cookie")
+   :full-and-display-names t))
+#+end_src
+*** Main configuration
+#+begin_src emacs-lisp
+(defun my-thumbs-up ()
+  (interactive)
+  (insert ":+1:"))
+
+(defun endless/slack-message-embed-mention ()
+  (interactive)
+  (call-interactively #'slack-message-embed-mention)
+  (insert " "))
+
+(use-package! slack
+  :commands (slack-start)
+  :init
+  (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
+  (setq slack-prefer-current-team t)
+  ;; from http://endlessparentheses.com/keep-your-slack-distractions-under-control-with-emacs.html
+  :config
+  (setq slack-thread-also-send-to-room nil)
+  (setq lui-time-stamp-format "%F [%R] %Z"))
+
+(use-package! ox-slack
+  :after (slack))
+
+(use-package! alert
+  :commands (alert)
+  :init
+  (setq alert-default-style 'libnotify))
+
+(map! :leader
+      "j s" #'slack-search-from-messages
+      "j r" #'slack-select-rooms
+      :desc "Select direct/instant messages"
+      "j d" #'slack-im-select-rooms
+      "j t" #'slack-all-threads
+      "j u" #'slack-select-unread-rooms
+      :prefix ("j f" . "slack-file")
+      "u" #'slack-file-upload
+      "l" #'slack-file-list)
+
+(map! :map slack-thread-message-buffer-mode-map
+      "C-:" #'slack-insert-emoji
+      "C-=" #'my-thumbs-up
+      "@"   #'endless/slack-message-embed-mention
+
+      :map slack-mode-map
+      "C-:" #'slack-insert-emoji
+      "C-=" #'my-thumbs-up
+      "@" #'endless/slack-message-embed-mention
+      ">" #'slack-thread-show-or-create)
+#+end_src
+** Plantuml
+#+begin_src emacs-lisp
+(setq plantuml-default-exec-mode 'jar)
+(add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
+(after! plantuml-mode
+  (set-popup-rule! "^\\*PLANTUML" :size 0.5 :side 'right :select nil :ttl 0))
+#+end_src
+** s3ed
+#+begin_src emacs-lisp
+(use-package! s3ed)
+(map! :map s3ed-mode-map
+      :leader
+      "s 3" #'s3ed-find-file)
+#+end_src
 * Language Configuration
 ** Clojure
 
