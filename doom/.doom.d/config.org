@@ -534,7 +534,7 @@ allowfullscreen>%s</iframe>" path (or "" desc)))
 * Package Configuration
 ** Eshell
 #+begin_src emacs-lisp
-(setq shell-file-name (if (eq system-type 'darwin) "bin/zsh" "bin/bash")
+(setq shell-file-name (if (eq system-type 'darwin) "/usr/bin/zsh" "/usr/bin/bash")
       eshell-history-size 5000
       eshell-buffer-maximum-lines 5000
       eshell-hist-ignoredups t
