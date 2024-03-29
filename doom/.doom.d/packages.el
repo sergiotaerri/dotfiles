@@ -59,5 +59,3 @@
 ;; workaround  for https://github.com/emacs-mirror/emacs/commit/86da812afb2572c7fead2bb07570b976bffd7c55
 (package! xref :pin "a82f459b37b31546bf274388baf8aca79e9c30d9")
 (package! alert)
-(package! org-drill)
-(package! forge :pin "0ca0ca8ac55f46f48a27cb8a690078380f6d5703")

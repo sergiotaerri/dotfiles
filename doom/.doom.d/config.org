@@ -17,7 +17,8 @@ for more info).
 None, for now...
 * Better defaults
 #+begin_src emacs-lisp
-(setq projectile-project-search-path '("~/Documents/php" "~/Documents/clj" "~/Documents/cljs" "~/Documents/bp")
+(setq projectile-project-search-path '("~/Documents/php" "~/Documents/clj" "~/Documents/cljs" "~/Documents/py"
+                                       "~/Documents/java" "~/Documents/cs" "~/Documents/js")
       +doom-dashboard-banner-file (expand-file-name "cdm.png" doom-private-dir)
       +doom-dashboard-banner-padding '(4 . 4)
       dired-dwim-target t
@@ -604,8 +605,6 @@ writeroom. So do I.
 
 (after!
   (clojure-mode cider-mode)
-
-  (add-to-list 'cider-test-defining-forms "defflow")
 
   (map! :map clojure-mode-map
         :localleader
